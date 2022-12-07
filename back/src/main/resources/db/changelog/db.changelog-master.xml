@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Ingo" id="1">
+        <createTable tableName="sector_group">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="sector_group_id_pk"/>
+            </column>
+            <column name="name" type="varchar(250)">
+                <constraints unique="true" uniqueConstraintName="sector_group_name_unq" nullable="false"/>
+            </column>
+            <column name="parent_group_id" type="bigint">
+            </column>
+        </createTable>
+        <createTable tableName="sector">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="sector_id_pk"/>
+            </column>
+            <column name="name" type="varchar(250)">
+                <constraints unique="true" uniqueConstraintName="sector_name_unq" nullable="false"/>
+            </column>
+            <column name="group_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="user_data">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="user_data_id_pk"/>
+            </column>
+            <column name="name" type="varchar(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="agreed_to_terms" type="boolean" defaultValueBoolean="true"/>
+        </createTable>
+        <createTable tableName="user_sector">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="user_sector_id_pk"/>
+            </column>
+            <column name="sector_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement tableName="sector_group" columnName="id" columnDataType="bigint" startWith="1"
+                          incrementBy="1"/>
+        <addAutoIncrement tableName="sector" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+        <createSequence sequenceName="hibernate_sequence" incrementBy="1" startValue="1"/>
+
+        <addForeignKeyConstraint baseTableName="sector" baseColumnNames="group_id"
+                                 constraintName="sector_to_sector_group_id_fk" referencedTableName="sector_group"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="user_sector" baseColumnNames="sector_id"
+                                 constraintName="user_sector_to_sector_id_fk" referencedTableName="sector"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="user_sector" baseColumnNames="user_id"
+                                 constraintName="user_sector_to_user_id_fk" referencedTableName="user_data"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

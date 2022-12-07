@@ -1,0 +1,19 @@
+version: '3.1'
+services:
+  dbpostgresql:
+    image: postgres
+    ports:
+      - "5455:5432"
+    volumes:
+      - "./postgres/postgres.conf:/usr/local/etc/postgres/postgres.conf"
+    command: "postgres -c config_file=/usr/local/etc/postgres/postgres.conf"
+    environment:
+      - POSTGRES_ROOT_PASSWORD=helmes
+      - POSTGRES_PASSWORD=helmes
+      - POSTGRES_USER=helmes
+      - POSTGRES_DB=mydb
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 9000:8080
